@@ -29,7 +29,7 @@
             "path": "odata/v2"
           },
           "[development]": {
-            "url": "https://apisalesdemo8.successfactors.com/odata/v2"
+            "url": "https://api44preview.sapsf.com/odata/v2"
           }
         }
       }

@@ -4,4 +4,4 @@ const getJobApplicationInterview = async (req) => {
   return oSrv.tx(req).run(req.query);
 };
 
-module.exports = {getJobApplicationInterview}
+module.exports = { getJobApplicationInterview };

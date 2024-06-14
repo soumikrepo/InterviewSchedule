@@ -3,7 +3,7 @@ const { getJobRequisition } = require("./src/JobRequisition");
 const { getUsersDetails } = require("./src/user");
 const { getJobApplication } = require("./src/jobApplication"); // Import the handler
 const { getJobApplicationInterview } = require("./src/jobApplicationInterview"); // Import the handler
-const { getPositionsDetails } = require("./src/position"); // Import the handler
+const { getPositionsDetails } = require("./src/Position"); // Import the handler
 
 module.exports = cds.service.impl(async (srv) => {
   srv.on("READ", "User", getUsersDetails);
@@ -16,4 +16,9 @@ module.exports = cds.service.impl(async (srv) => {
     "jobApplicationInterview",
     getJobApplicationInterview
   );
+
+
+  
 });
+
+

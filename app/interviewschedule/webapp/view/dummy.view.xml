@@ -1,0 +1,15 @@
+<mvc:View
+    xmlns:uxap="sap.uxap"
+    controllerName="com.app.interviewschedule.controller.View1"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:card="sap.f.cards"
+    height="100%"
+>
+
+
+</mvc:View>
+
+

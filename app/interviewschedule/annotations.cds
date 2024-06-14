@@ -1,0 +1,1 @@
+using serviceCatalog as service from '../../srv/service';

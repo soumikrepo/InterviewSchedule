@@ -14,12 +14,13 @@ entity JobRequisition          as
         statusSetId,
         jobProfile,
         status, //reqStatus_Interview, reqStatus_Open
-        positionNumber,
         recruiter,
-    // Position : Association to Position on Position.code = $self.positionNumber, // Define an association to Position with an ON-condition
+        jobApplications : Association to  JobApplication on jobApplications.applicationId = jobReqId,
+        positionNumber,
+        
     }
 
-entity jobApplicationInterview as
+entity JobApplicationInterview as
     projection on sf_api_service.JobApplicationInterview {
         applicationId,
         applicationInterviewId,
@@ -33,7 +34,7 @@ entity jobApplicationInterview as
         status,
     }
 
-entity jobApplication          as
+entity JobApplication          as
     projection on sf_api_service.JobApplication {
         jobAppGuid,
         applicationId,
@@ -41,6 +42,7 @@ entity jobApplication          as
         lastName,
         contactEmail,
         jobReqId,
+        jobApplicationInterview : Association to many JobApplicationInterview on jobApplicationInterview.applicationId = applicationId
         // jobApplicationInterview : Association to many jobApplicationInterview on jobApplicationInterview.applicationId = $self.applicationId
     }
 

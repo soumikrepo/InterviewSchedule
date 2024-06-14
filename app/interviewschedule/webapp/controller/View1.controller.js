@@ -1,91 +1,115 @@
-sap.ui.define([
-  "sap/ui/core/mvc/Controller",
-  "sap/ui/model/json/JSONModel"
-],
-  function (Controller, JSONModel, ODataModel) {
+sap.ui.define(
+  [
+    "sap/ui/core/mvc/Controller",
+    "sap/ui/model/json/JSONModel",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
+  ],
+  function (Controller, JSONModel, Filter, FilterOperator) {
     "use strict";
 
     return Controller.extend("com.app.interviewschedule.controller.View1", {
       onInit: function () {
-        //Created an empty array
-        let AppInterview = []
-        let valueIndex = 0;
-        //model object
-        var oModel = this.getOwnerComponent().getModel()
-        var oModel1 = this.getOwnerComponent().getModel("v4");
-        //creating the json model object
-        var jsonModel = new JSONModel({
-          JOBREQ: []
-        })
-
-
-
-        //Set the json model view level
-        this.getView().setModel(jsonModel, "local")
-
-
-
-        //+++++++calling the getData method for fetch the JobApplication, JobApplicationInterview+++++
-        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-          this.getData(oModel, "/JobApplication", [], ["jobApplicationInterview"],4,0)
-
-          .then((data1)=>{
-            let DATA1 = data1.results
-
-            DATA1.forEach ((element)=>{
-
-              AppInterview.push(element.jobApplicationInterview.results.length)
-
-            })
-          })
-
-        //+++++++calling the getData method for fetch the JobApplication, JobApplicationInterview+++++
-        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-          this.getData(oModel, "/JobRequisition", [], ["jobApplications"],4,0)
-
-          .then((data) => {
-            let DATA = data.results
-
-            DATA.forEach((element) => {
-              let count = element.jobApplications.length
-              element.Count = count
-              
-              // Check if valueIndex is within the bounds of the value array
-              if (valueIndex < AppInterview.length) {
-                 element.Count1 = AppInterview[valueIndex];
-                 valueIndex++;
-               } else {
-                element.Count1 = null; // or any default value you prefer
-            }
-              
-          })
-          this.getView().getModel("local").getData().JOBREQ = DATA
-          this.getView().getModel("local").refresh(true)
-        })
+        const oRouter = this.getOwnerComponent().getRouter();
+        this._initialSetup();
+        oRouter.attachRoutePatternMatched(this.loadPage, this);
       },
 
+      _initialSetup: function () {
+        this.iSkip = 0;
+        this.iTop = 10;
+        //Set the json model view level
+        this.getView().setModel(
+          new JSONModel({
+            JOBREQ: [],
+          }),
+          "local"
+        );
+      },
 
+      loadPage: async function () {
+        //Created an empty array
+        let AppInterview = [],
+          valueIndex = 0,
+          aApplicationIds = [];
+        //model object
+        const oModel = this.getOwnerComponent().getModel();
 
+        // Getting Job Req and Job Application
+        const { results: aData } = await this.getData(
+          oModel,
+          "/JobRequisition",
+          [],
+          ["jobApplications"],
+          this.iTop,
+          this.iSkip
+        );
+        // Getting all the application Ids
+        aData.forEach((applications) => {
+          const aApplications = applications.jobApplications;
+          aApplicationIds = [
+            ...aApplicationIds,
+            ...aApplications.map((application) => application.applicationId),
+          ];
+        });
+
+        const aJobApplicationfilters = aApplicationIds.map(
+          (applicationId) =>
+            new Filter("applicationId", FilterOperator.EQ, applicationId)
+        );
+        // Getting The Job Application interview Data
+        const { results: aJobInterviewData } = await this.getData(
+          oModel,
+          "/JobApplicationInterview",
+          aJobApplicationfilters,
+          [],
+          null,
+          null
+        );
+
+        // Setting up the Array For Job Application interview
+        aData.forEach((jobReq) => {
+          jobReq.jobApplications.forEach((applications) => {
+            const applicationId = applications.applicationId;
+            const aFilteredInterview = aJobInterviewData.filter(
+              (interViewData) => interViewData.applicationId === applicationId
+            );
+            applications.jonApplicationInterview = aFilteredInterview;
+            applications.InterviewCount = aFilteredInterview.length;
+          });
+        });
+
+        // Setting up the Application Data
+        this.getView().getModel("local").getData().JOBREQ = aData;
+      },
 
       // Get Data function implementation
-      getData: async function (oModel, sPath, aFilters = [], aExpand = [], top, skip) {
+      getData: async function (
+        oModel,
+        sPath,
+        aFilters = [],
+        aExpand = [],
+        top,
+        skip
+      ) {
         sap.ui.core.BusyIndicator.show();
         this.oModel = oModel;
         this.sPath = sPath;
         this.aFilters = aFilters;
         this.aExpand = aExpand;
-        this.top = top
-        this.skip = skip;
+        top ? (this.top = top) : "";
+        skip ? (this.skip = skip) : "";
+
+        const oUrlParameters = {
+          $expand: aExpand,
+        };
+
+        top ? (oUrlParameters.$top = top) : "";
+        skip ? (oUrlParameters.$skip = skip) : "";
 
         return new Promise((resolve, reject) => {
           oModel.read(sPath, {
-            urlParameters: {
-              $expand: aExpand,
-              $top: top,
-              $skip: skip
-            },
+            urlParameters: oUrlParameters,
             filters: [...aFilters],
             success: function (oSuccessData) {
               sap.ui.core.BusyIndicator.hide();
@@ -98,13 +122,6 @@ sap.ui.define([
           });
         });
       },
-
-
-   
-
-
-
-
-
     });
-  });
+  }
+);

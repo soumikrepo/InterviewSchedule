@@ -9,7 +9,7 @@ module.exports = cds.service.impl(async (srv) => {
   srv.on("READ", "User", getUsersDetails);
   srv.on("READ", "JobRequisition", getJobRequisition);
   srv.on("READ", "JobApplication", getJobApplication);
-  srv.on("READ", "jobApplicationInterview", getJobApplicationInterview);
+  srv.on("READ", "JobApplicationInterview", getJobApplicationInterview);
   srv.on("READ", "Position", getPositionsDetails);
   srv.on(
     ["CREATE", "UPDATE"],

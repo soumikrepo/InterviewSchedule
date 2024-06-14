@@ -69,18 +69,21 @@ sap.ui.define(
 
         // Setting up the Array For Job Application interview
         aData.forEach((jobReq) => {
+          jobReq.JobApplicationCount = jobReq.jobApplications.length;
+          jobReq.JobInterviewCount = 0;
           jobReq.jobApplications.forEach((applications) => {
             const applicationId = applications.applicationId;
             const aFilteredInterview = aJobInterviewData.filter(
               (interViewData) => interViewData.applicationId === applicationId
             );
             applications.jonApplicationInterview = aFilteredInterview;
-            applications.InterviewCount = aFilteredInterview.length;
+            jobReq.JobInterviewCount = jobReq.JobInterviewCount + aFilteredInterview.length;
           });
         });
 
         // Setting up the Application Data
         this.getView().getModel("local").getData().JOBREQ = aData;
+        this.getView().getModel("local").refresh(true);
       },
 
       // Get Data function implementation

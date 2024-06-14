@@ -59,11 +59,11 @@
                                         justifyContent="SpaceAround"              
                                     >
                                         <Text
-                                            text="{local>Count} candidates to Schedule"
+                                            text="{local>JobApplicationCount} candidates to Schedule"
                                             class="sapUiSmallMarginBegin"
                                         />
                                         <Button
-                                            text="{local>Count1} not Started"
+                                            text="{local>JobInterviewCount} not Started"
                                             type="Default"
                                             class="sapUiSmallMarginEnd"
                                         />

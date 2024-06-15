@@ -47,9 +47,10 @@ sap.ui.define(
         // Getting all the application Ids
         aData.forEach((applications) => {
           const aApplications = applications.jobApplications;
+          const aCurrentApplicationId = aApplications.map((application) => application.applicationId);
           aApplicationIds = [
             ...aApplicationIds,
-            ...aApplications.map((application) => application.applicationId),
+            ...aCurrentApplicationId,
           ];
         });
 

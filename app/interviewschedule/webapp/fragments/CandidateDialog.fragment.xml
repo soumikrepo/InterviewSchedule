@@ -1,3 +1,23 @@
-<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Dialog
+        id="popup"
+        draggable="true"
+        resizable="true"
+    >
+        <content />
+        <footer>
+            <Toolbar>
+                <ToolbarSpacer />
 
+                <Button
+                    type="Reject"
+                    text="Close"
+                    press="closeDialog"
+                />
+            </Toolbar>
+        </footer>
+    </Dialog>
 </core:FragmentDefinition>

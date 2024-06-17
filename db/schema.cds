@@ -43,7 +43,7 @@ entity JobApplication          as
         contactEmail,
         jobReqId,
         jobApplicationInterview : Association to many JobApplicationInterview on jobApplicationInterview.applicationId = applicationId
-        // jobApplicationInterview : Association to many jobApplicationInterview on jobApplicationInterview.applicationId = $self.applicationId
+      
     }
 
 entity User                    as

@@ -30,6 +30,7 @@
                         alignItems="Center"
                         class="sapUiMediumMarginEnd"
                         items="{local>/JOBREQ}"
+                    
                     >
                         <f:Card
                             class="sapUiMediumMargin "
@@ -59,13 +60,14 @@
                                         justifyContent="SpaceAround"              
                                     >
                                         <Text
-                                            text="{local>JobApplicationCount} Job Applications"
+                                            text="{local>JobApplicationCount} Candidates to schedule"
                                             class="sapUiSmallMarginBegin"
                                         />
                                         <Button
-                                            text="{local>JobInterviewCount} Interview"
+                                            text="{local>JobInterviewCount} not started"
                                             type="Default"
                                             class="sapUiSmallMarginEnd"
+                                            press = "onPressAppInterview"
                                         />
                                     </FlexBox>
                                     <Panel

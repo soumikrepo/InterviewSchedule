@@ -4,8 +4,9 @@ sap.ui.define(
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    "sap/ui/core/Fragment"
   ],
-  function (Controller, JSONModel, Filter, FilterOperator) {
+  function (Controller, JSONModel, Filter, FilterOperator, Fragment) {
     "use strict";
 
     return Controller.extend("com.app.interviewschedule.controller.View1", {
@@ -131,6 +132,38 @@ sap.ui.define(
         // Setting up the Application Data
         this.getView().getModel("local").getData().JOBREQ = aData;
         this.getView().getModel("local").refresh(true);
+      },
+
+      oAppInterviewPopup : null,
+      onPressAppInterview : function()
+      {
+        var that = this;
+
+        if(!this.oAppInterviewPopup)
+        {
+          Fragment.load({
+
+            name : "com.app.interviewschedule.fragments.CandidateDialog",
+            controller : this,
+            id : "AppInterview"
+          }).then(function (oFragment){
+            that.oAppInterviewPopup = oFragment;
+            that.getView().addDependent(that.oAppInterviewPopup)
+            that.oAppInterviewPopup.setTitle("The rounds below haven't started yet")
+            that.oAppInterviewPopup.open()
+          })
+        }
+
+        else
+        {
+          this.oAppInterviewPopup.open();
+        }
+      },
+
+      closeDialog : function(oEvent)
+      {
+          
+          oEvent.getSource().getParent().getParent().close()
       },
 
 

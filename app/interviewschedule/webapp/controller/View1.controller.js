@@ -18,7 +18,7 @@ sap.ui.define(
 
       _initialSetup: function () {
         this.iSkip = 0;
-        this.iTop = 11;
+        this.iTop = 13;
         //Set the json model view level
         this.getView().setModel(
           new JSONModel({
@@ -32,6 +32,7 @@ sap.ui.define(
         //Created an empty array
         let aApplicationIds = [];
         let  aPositionNumbers = [];
+        
         //model object
         const oModel = this.getOwnerComponent().getModel();
 
@@ -56,12 +57,16 @@ sap.ui.define(
             ...aApplicationIds,
             ...aCurrentApplicationId,
           ]
-          const aPositionNumber = applications.positionNumber;
-          aPositionNumbers = [
-           aPositionNumber,
-          ];       
+               
 
         });
+
+        //Getting all the position number
+        const aPositionNumber = aData.map((app) =>app.positionNumber);
+        aPositionNumbers = [
+         ...aPositionNumbers,
+         ...aPositionNumber,
+        ]; 
 
         // Job applications filter (1)
         const aJobApplicationfilters = aApplicationIds.map(

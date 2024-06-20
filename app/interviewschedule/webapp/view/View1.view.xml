@@ -39,7 +39,6 @@
                             <f:header>
                                 <card:Header
                                     title="{=${local>TitlePosition} ? ${local>TitlePosition} + ' (' + ${local>positionCode} + ')': ''}"
-                                    subtitle="Brazil (BR)"
                                     iconSrc="data:image/png;base64,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"
                                 />
                             </f:header>
@@ -57,17 +56,20 @@
                                         width="auto"
                                         height="auto"
                                         alignItems="Center"
-                                        justifyContent="SpaceAround"              
+                                        justifyContent="SpaceAround"      
+                                        id="2ndflexbox"        
                                     >
-                                        <Text
+                                        <Button
                                             text="{local>JobApplicationCount} Candidates to schedule"
                                             class="sapUiSmallMarginBegin"
+                                                 id="CandidateScheduleBtn"
                                         />
                                         <Button
                                             text="{local>JobInterviewCount} not started"
                                             type="Default"
                                             class="sapUiSmallMarginEnd"
                                             press = "onPressAppInterview"
+                                             id="NotStartedBtn"
                                         />
                                     </FlexBox>
                                     <Panel
@@ -78,9 +80,7 @@
                                         class="sapUiResponsiveMargin"
                                     >
                                     <content>
-                                    <Text text="Round1" ></Text>
-                                     <Text text="Round2" ></Text>
-                                      <Text text="Round3" ></Text>
+                                  
                                     </content>
                                     </Panel>
                                 </VBox>

@@ -4,9 +4,11 @@ sap.ui.define(
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-    "sap/ui/core/Fragment"
+    "sap/ui/core/Fragment",
+    "sap/m/MessageBox",
+    "sap/m/MessageToast"
   ],
-  function (Controller, JSONModel, Filter, FilterOperator, Fragment) {
+  function (Controller, JSONModel, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
     "use strict";
 
     return Controller.extend("com.app.interviewschedule.controller.View1", {
@@ -18,11 +20,25 @@ sap.ui.define(
 
       _initialSetup: function () {
         this.iSkip = 0;
-        this.iTop = 13;
+        this.iTop = 2;
         //Set the json model view level
         this.getView().setModel(
           new JSONModel({
             JOBREQ: [],
+            PATH: "",
+            interviewData:
+            {
+              "applicationInterviewId": "",
+              "notes": "",
+              "endDate": "",
+              "candSlotMapId": "",
+              "recruitEventStaffId": 1,
+              "isTimeSet": "",
+              "source": "",
+              "applicationId": "",
+              "startDate": "",
+              "status": ""
+            }
           }),
           "local"
         );
@@ -31,8 +47,9 @@ sap.ui.define(
       loadPage: async function () {
         //Created an empty array
         let aApplicationIds = [];
-        let  aPositionNumbers = [];
-        
+        let aPositionNumbers = [];
+
+
         //model object
         const oModel = this.getOwnerComponent().getModel();
 
@@ -50,23 +67,23 @@ sap.ui.define(
 
           const aApplications = applications.jobApplications;
 
-         
+
 
           const aCurrentApplicationId = aApplications.map((application) => application.applicationId);
           aApplicationIds = [
             ...aApplicationIds,
             ...aCurrentApplicationId,
           ]
-               
+
 
         });
 
         //Getting all the position number
-        const aPositionNumber = aData.map((app) =>app.positionNumber);
+        const aPositionNumber = aData.map((app) => app.positionNumber);
         aPositionNumbers = [
-         ...aPositionNumbers,
-         ...aPositionNumber,
-        ]; 
+          ...aPositionNumbers,
+          ...aPositionNumber,
+        ];
 
         // Job applications filter (1)
         const aJobApplicationfilters = aApplicationIds.map(
@@ -76,10 +93,10 @@ sap.ui.define(
 
 
         // Position number filter (2)
-          const aPositionNumberFilters = aPositionNumbers.map(
-            (PositionNumber)=>
-            new Filter("code", FilterOperator.EQ, PositionNumber )
-          )
+        const aPositionNumberFilters = aPositionNumbers.map(
+          (PositionNumber) =>
+            new Filter("code", FilterOperator.EQ, PositionNumber)
+        )
 
 
         // Getting The Job Application interview Data with passing the JobApplication Filter (1)
@@ -94,7 +111,7 @@ sap.ui.define(
 
 
         // Gettig the Position Details with passing the PositionNumber Filter(2)
-        const {results: aPosition} = await this.getData(
+        const { results: aPosition } = await this.getData(
           oModel,
           "/Position",
           aPositionNumberFilters,
@@ -103,9 +120,10 @@ sap.ui.define(
           null
         );
 
-     
+
 
         // Setting up the Array For Job Application interview And Position number
+
         aData.forEach((jobReq) => {
           jobReq.JobApplicationCount = jobReq.jobApplications.length;
           jobReq.JobInterviewCount = 0;
@@ -120,14 +138,14 @@ sap.ui.define(
           });
 
           const positionNumber = jobReq.positionNumber
-             const aFilteredPosition = aPosition.filter(
-             (positionData) => positionData.code === positionNumber
+          const aFilteredPosition = aPosition.filter(
+            (positionData) => positionData.code === positionNumber
           );
 
           if (aFilteredPosition.length > 0) {
             jobReq.positionCode = aFilteredPosition[0].code;
             jobReq.TitlePosition = aFilteredPosition[0].positionTitle;
-          } 
+          }
           else {
             jobReq.positionCode = ''; // or handle the case when aFilteredPosition is empty
             jobReq.TitlePosition = '';// or handle the case when aFilteredPosition is empty
@@ -136,39 +154,75 @@ sap.ui.define(
 
         // Setting up the Application Data
         this.getView().getModel("local").getData().JOBREQ = aData;
+        // let jobApplicationsData = aData.map(obj => obj.jobApplications);
+        // this.getView().getModel("local").getData().JobApplicationsData = aData[0].jobApplications;
         this.getView().getModel("local").refresh(true);
       },
 
-      oAppInterviewPopup : null,
-      onPressAppInterview : function()
-      {
+      oAppInterviewPopup: null,
+      onPressAppInterview: function (oEvent) {
+
+        var Path = oEvent.oSource.mBindingInfos.text.binding.aBindings[0].oContext.sPath
+        Path += "/jobApplications";
+        console.log(Path)
+        this.getView().getModel("local").getData().PATH = Path;
         var that = this;
 
-        if(!this.oAppInterviewPopup)
-        {
+        if (!this.oAppInterviewPopup) {
           Fragment.load({
 
-            name : "com.app.interviewschedule.fragments.CandidateDialog",
-            controller : this,
-            id : "AppInterview"
-          }).then(function (oFragment){
+            name: "com.app.interviewschedule.fragments.CandidateDialog",
+            controller: this,
+            id: "AppInterview"
+          }).then(function (oFragment) {
             that.oAppInterviewPopup = oFragment;
             that.getView().addDependent(that.oAppInterviewPopup)
-            that.oAppInterviewPopup.setTitle("The rounds below haven't started yet")
+            that.oAppInterviewPopup.setTitle("Creating new Interview")
             that.oAppInterviewPopup.open()
           })
         }
 
-        else
-        {
+        else {
           this.oAppInterviewPopup.open();
         }
       },
 
-      closeDialog : function(oEvent)
-      {
-          
-          oEvent.getSource().getParent().getParent().close()
+
+      saveDialog: function () {
+        //step-1 get the payload
+        var payload = this.getView().getModel("local").getProperty("/interviewData")
+
+        //Modifying the payload
+        payload.startDate = this.DateConvertion(payload.startDate)
+        payload.endDate = this.DateConvertion(payload.endDate)
+
+        // step-2 check if it is valid
+        if (!payload.applicationId) {
+          MessageBox.error("Please enter valid Application Id")
+        }
+
+        //step-3 get the odata model object
+        var oDataModel = this.getView().getModel()
+
+        //step-4 fire the post call
+        oDataModel.create("/JobApplicationInterview", payload, {
+
+          //step-5 success - callback if post was fine
+          success: function (data) {
+            MessageToast.show("Interview was created successfully")
+          },
+          //step-6 error - callback if post was having issue
+          error: function (oErr) {
+            MessageBox.error("Opps! something went wrong : " + JSON.parse(oErr.responseText).error.message.value)
+          },
+
+        })
+      },
+
+
+      closeDialog: function (oEvent) {
+
+        oEvent.getSource().getParent().getParent().close()
       },
 
 
@@ -213,6 +267,25 @@ sap.ui.define(
           });
         });
       },
+
+      //Date function
+      DateConvertion: function (timestamp) {
+        let date = new Date(timestamp);
+        // Get the individual components of the date
+        let year = date.getFullYear();
+        let month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero-indexed
+        let day = ('0' + date.getDate()).slice(-2);
+        let hours = ('0' + date.getHours()).slice(-2);
+        let minutes = ('0' + date.getMinutes()).slice(-2);
+        let seconds = ('0' + date.getSeconds()).slice(-2);
+        let milliseconds = ('00' + date.getMilliseconds()).slice(-3);
+
+        // Format the date in the desired format
+        let formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
+
+        return formattedDate
+
+      }
     });
   }
 );

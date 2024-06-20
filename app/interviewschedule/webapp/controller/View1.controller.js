@@ -204,7 +204,7 @@ sap.ui.define(
           error: function (oErr) {
             MessageBox.error(
               "Opps! something went wrong : " +
-                JSON.parse(oErr.responseText).error.message.value
+              JSON.parse(oErr.responseText).error.message.value
             );
           },
         });
@@ -271,8 +271,12 @@ sap.ui.define(
 
         return formattedDate;
       },
+
+      oCandidateToSchedulePopup: null,
       onCandidateToSchedule: function (oEvent) {
+
         const { jobApplications } = oEvent
+
           .getSource()
           .getBindingContext("local")
           .getObject();
@@ -281,8 +285,26 @@ sap.ui.define(
           .setProperty("/currentApplications", jobApplications);
         this.getView().getModel("local").refresh(true);
 
-        // TODO Fragment to be loaded using Fragment.load
-        // TODO Fragment To be opened using open method
+        // TODO Fragment to be loaded and Opened
+        var that = this;
+        if (!this.oCandidateToSchedulePopup) {
+          Fragment.load({
+
+            name: "com.app.interviewschedule.fragments.CandidateDialog",
+            controller: this,
+            id: "AppInterview"
+          }).then(function (oFragment) {
+            that.oCandidateToSchedulePopup = oFragment;
+            that.getView().addDependent(that.oCandidateToSchedulePopup)
+            that.oCandidateToSchedulePopup.setTitle("Select Candiates")
+            that.oCandidateToSchedulePopup.open()
+          })
+        }
+
+        else {
+          this.oCandidateToSchedulePopup.open();
+        }
+       
       },
     });
   }

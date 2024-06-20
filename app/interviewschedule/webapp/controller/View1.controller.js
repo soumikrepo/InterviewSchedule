@@ -6,9 +6,17 @@ sap.ui.define(
     "sap/ui/model/FilterOperator",
     "sap/ui/core/Fragment",
     "sap/m/MessageBox",
-    "sap/m/MessageToast"
+    "sap/m/MessageToast",
   ],
-  function (Controller, JSONModel, Filter, FilterOperator, Fragment, MessageBox, MessageToast) {
+  function (
+    Controller,
+    JSONModel,
+    Filter,
+    FilterOperator,
+    Fragment,
+    MessageBox,
+    MessageToast
+  ) {
     "use strict";
 
     return Controller.extend("com.app.interviewschedule.controller.View1", {
@@ -20,25 +28,24 @@ sap.ui.define(
 
       _initialSetup: function () {
         this.iSkip = 0;
-        this.iTop = 2;
+        this.iTop = 15;
         //Set the json model view level
         this.getView().setModel(
           new JSONModel({
             JOBREQ: [],
             PATH: "",
-            interviewData:
-            {
-              "applicationInterviewId": "",
-              "notes": "",
-              "endDate": "",
-              "candSlotMapId": "",
-              "recruitEventStaffId": 1,
-              "isTimeSet": "",
-              "source": "",
-              "applicationId": "",
-              "startDate": "",
-              "status": ""
-            }
+            interviewData: {
+              applicationInterviewId: "",
+              notes: "",
+              endDate: "",
+              candSlotMapId: "",
+              recruitEventStaffId: 1,
+              isTimeSet: "",
+              source: "",
+              applicationId: "",
+              startDate: "",
+              status: "",
+            },
           }),
           "local"
         );
@@ -48,7 +55,6 @@ sap.ui.define(
         //Created an empty array
         let aApplicationIds = [];
         let aPositionNumbers = [];
-
 
         //model object
         const oModel = this.getOwnerComponent().getModel();
@@ -64,26 +70,17 @@ sap.ui.define(
         );
         // Getting all the application Ids
         aData.forEach((applications) => {
-
           const aApplications = applications.jobApplications;
 
-
-
-          const aCurrentApplicationId = aApplications.map((application) => application.applicationId);
-          aApplicationIds = [
-            ...aApplicationIds,
-            ...aCurrentApplicationId,
-          ]
-
-
+          const aCurrentApplicationId = aApplications.map(
+            (application) => application.applicationId
+          );
+          aApplicationIds = [...aApplicationIds, ...aCurrentApplicationId];
         });
 
         //Getting all the position number
         const aPositionNumber = aData.map((app) => app.positionNumber);
-        aPositionNumbers = [
-          ...aPositionNumbers,
-          ...aPositionNumber,
-        ];
+        aPositionNumbers = [...aPositionNumbers, ...aPositionNumber];
 
         // Job applications filter (1)
         const aJobApplicationfilters = aApplicationIds.map(
@@ -91,13 +88,11 @@ sap.ui.define(
             new Filter("applicationId", FilterOperator.EQ, applicationId)
         );
 
-
         // Position number filter (2)
         const aPositionNumberFilters = aPositionNumbers.map(
           (PositionNumber) =>
             new Filter("code", FilterOperator.EQ, PositionNumber)
-        )
-
+        );
 
         // Getting The Job Application interview Data with passing the JobApplication Filter (1)
         const { results: aJobInterviewData } = await this.getData(
@@ -109,7 +104,6 @@ sap.ui.define(
           null
         );
 
-
         // Gettig the Position Details with passing the PositionNumber Filter(2)
         const { results: aPosition } = await this.getData(
           oModel,
@@ -119,8 +113,6 @@ sap.ui.define(
           null,
           null
         );
-
-
 
         // Setting up the Array For Job Application interview And Position number
 
@@ -134,10 +126,11 @@ sap.ui.define(
               (interViewData) => interViewData.applicationId === applicationId
             );
             applications.jonApplicationInterview = aFilteredInterview;
-            jobReq.JobInterviewCount = jobReq.JobInterviewCount + aFilteredInterview.length;
+            jobReq.JobInterviewCount =
+              jobReq.JobInterviewCount + aFilteredInterview.length;
           });
 
-          const positionNumber = jobReq.positionNumber
+          const positionNumber = jobReq.positionNumber;
           const aFilteredPosition = aPosition.filter(
             (positionData) => positionData.code === positionNumber
           );
@@ -145,10 +138,9 @@ sap.ui.define(
           if (aFilteredPosition.length > 0) {
             jobReq.positionCode = aFilteredPosition[0].code;
             jobReq.TitlePosition = aFilteredPosition[0].positionTitle;
-          }
-          else {
-            jobReq.positionCode = ''; // or handle the case when aFilteredPosition is empty
-            jobReq.TitlePosition = '';// or handle the case when aFilteredPosition is empty
+          } else {
+            jobReq.positionCode = ""; // or handle the case when aFilteredPosition is empty
+            jobReq.TitlePosition = ""; // or handle the case when aFilteredPosition is empty
           }
         });
 
@@ -161,72 +153,66 @@ sap.ui.define(
 
       oAppInterviewPopup: null,
       onPressAppInterview: function (oEvent) {
-
-        var Path = oEvent.oSource.mBindingInfos.text.binding.aBindings[0].oContext.sPath
+        var Path =
+          oEvent.oSource.mBindingInfos.text.binding.aBindings[0].oContext.sPath;
         Path += "/jobApplications";
-        console.log(Path)
+        console.log(Path);
         this.getView().getModel("local").getData().PATH = Path;
         var that = this;
 
         if (!this.oAppInterviewPopup) {
           Fragment.load({
-
             name: "com.app.interviewschedule.fragments.CandidateDialog",
             controller: this,
-            id: "AppInterview"
+            id: "AppInterview",
           }).then(function (oFragment) {
             that.oAppInterviewPopup = oFragment;
-            that.getView().addDependent(that.oAppInterviewPopup)
-            that.oAppInterviewPopup.setTitle("Creating new Interview")
-            that.oAppInterviewPopup.open()
-          })
-        }
-
-        else {
+            that.getView().addDependent(that.oAppInterviewPopup);
+            that.oAppInterviewPopup.setTitle("Creating new Interview");
+            that.oAppInterviewPopup.open();
+          });
+        } else {
           this.oAppInterviewPopup.open();
         }
       },
 
-
       saveDialog: function () {
         //step-1 get the payload
-        var payload = this.getView().getModel("local").getProperty("/interviewData")
+        var payload = this.getView()
+          .getModel("local")
+          .getProperty("/interviewData");
 
         //Modifying the payload
-        payload.startDate = this.DateConvertion(payload.startDate)
-        payload.endDate = this.DateConvertion(payload.endDate)
+        payload.startDate = this.DateConvertion(payload.startDate);
+        payload.endDate = this.DateConvertion(payload.endDate);
 
         // step-2 check if it is valid
         if (!payload.applicationId) {
-          MessageBox.error("Please enter valid Application Id")
+          MessageBox.error("Please enter valid Application Id");
         }
 
         //step-3 get the odata model object
-        var oDataModel = this.getView().getModel()
+        var oDataModel = this.getView().getModel();
 
         //step-4 fire the post call
         oDataModel.create("/JobApplicationInterview", payload, {
-
           //step-5 success - callback if post was fine
           success: function (data) {
-            MessageToast.show("Interview was created successfully")
+            MessageToast.show("Interview was created successfully");
           },
           //step-6 error - callback if post was having issue
           error: function (oErr) {
-            MessageBox.error("Opps! something went wrong : " + JSON.parse(oErr.responseText).error.message.value)
+            MessageBox.error(
+              "Opps! something went wrong : " +
+                JSON.parse(oErr.responseText).error.message.value
+            );
           },
-
-        })
+        });
       },
-
 
       closeDialog: function (oEvent) {
-
-        oEvent.getSource().getParent().getParent().close()
+        oEvent.getSource().getParent().getParent().close();
       },
-
-
-
 
       // Get Data function implementation
       getData: async function (
@@ -273,19 +259,31 @@ sap.ui.define(
         let date = new Date(timestamp);
         // Get the individual components of the date
         let year = date.getFullYear();
-        let month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero-indexed
-        let day = ('0' + date.getDate()).slice(-2);
-        let hours = ('0' + date.getHours()).slice(-2);
-        let minutes = ('0' + date.getMinutes()).slice(-2);
-        let seconds = ('0' + date.getSeconds()).slice(-2);
-        let milliseconds = ('00' + date.getMilliseconds()).slice(-3);
+        let month = ("0" + (date.getMonth() + 1)).slice(-2); // Months are zero-indexed
+        let day = ("0" + date.getDate()).slice(-2);
+        let hours = ("0" + date.getHours()).slice(-2);
+        let minutes = ("0" + date.getMinutes()).slice(-2);
+        let seconds = ("0" + date.getSeconds()).slice(-2);
+        let milliseconds = ("00" + date.getMilliseconds()).slice(-3);
 
         // Format the date in the desired format
         let formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
 
-        return formattedDate
+        return formattedDate;
+      },
+      onCandidateToSchedule: function (oEvent) {
+        const { jobApplications } = oEvent
+          .getSource()
+          .getBindingContext("local")
+          .getObject();
+        this.getView()
+          .getModel("local")
+          .setProperty("/currentApplications", jobApplications);
+        this.getView().getModel("local").refresh(true);
 
-      }
+        // TODO Fragment to be loaded using Fragment.load
+        // TODO Fragment To be opened using open method
+      },
     });
   }
 );

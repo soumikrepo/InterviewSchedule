@@ -28,12 +28,12 @@
                         justifyContent="SpaceAround"
                         wrap="Wrap"
                         alignItems="Center"
-                        class="sapUiMediumMarginEnd"
                         items="{local>/JOBREQ}"
                     
                     >
                         <f:Card
-                            class="sapUiMediumMargin "
+                            class="sapUiMediumMarginBottom"
+                            width="30em"
                             height="100%"
                         >
                             <f:header>
@@ -62,7 +62,8 @@
                                         <Button
                                             text="{local>JobApplicationCount} Candidates to schedule"
                                             class="sapUiSmallMarginBegin"
-                                                 id="CandidateScheduleBtn"
+                                            id="CandidateScheduleBtn"
+                                            press="onCandidateToSchedule"
                                         />
                                         <Button
                                             text="{local>JobInterviewCount} not started"

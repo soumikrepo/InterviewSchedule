@@ -21,14 +21,14 @@ sap.ui.define(
 
     return Controller.extend("com.app.interviewschedule.controller.View1", {
       onInit: function () {
-        const oRouter = this.getOwnerComponent().getRouter();
+        this.oRouter = this.getOwnerComponent().getRouter();
         this._initialSetup();
-        oRouter.attachRoutePatternMatched(this.loadPage, this);
+        this.oRouter.attachRoutePatternMatched(this.loadPage, this);
       },
 
       _initialSetup: function () {
         this.iSkip = 0;
-        this.iTop = 15;
+        this.iTop = 100;
         //Set the json model view level
         this.getView().setModel(
           new JSONModel({
@@ -176,41 +176,15 @@ sap.ui.define(
         }
       },
 
-      saveDialog: function () {
-        //step-1 get the payload
-        var payload = this.getView()
-          .getModel("local")
-          .getProperty("/interviewData");
+      StartScheduleBtn: function (oEvent) {
+        debugger
+       this.oRouter.navTo("RouteView2",{
 
-        //Modifying the payload
-        payload.startDate = this.DateConvertion(payload.startDate);
-        payload.endDate = this.DateConvertion(payload.endDate);
 
-        // step-2 check if it is valid
-        if (!payload.applicationId) {
-          MessageBox.error("Please enter valid Application Id");
-        }
-
-        //step-3 get the odata model object
-        var oDataModel = this.getView().getModel();
-
-        //step-4 fire the post call
-        oDataModel.create("/JobApplicationInterview", payload, {
-          //step-5 success - callback if post was fine
-          success: function (data) {
-            MessageToast.show("Interview was created successfully");
-          },
-          //step-6 error - callback if post was having issue
-          error: function (oErr) {
-            MessageBox.error(
-              "Opps! something went wrong : " +
-              JSON.parse(oErr.responseText).error.message.value
-            );
-          },
-        });
+       })
       },
 
-      closeDialog: function (oEvent) {
+      cancelDialog: function (oEvent) {
         oEvent.getSource().getParent().getParent().close();
       },
 
@@ -274,7 +248,6 @@ sap.ui.define(
 
       oCandidateToSchedulePopup: null,
       onCandidateToSchedule: function (oEvent) {
-
         const { jobApplications } = oEvent
 
           .getSource()
@@ -304,8 +277,21 @@ sap.ui.define(
         else {
           this.oCandidateToSchedulePopup.open();
         }
-       
+
       },
+
+      onPressCard: function (oEvent) {
+       debugger
+        const { jonApplicationInterview } = oEvent
+
+          .getSource()
+          .getBindingContext("local")
+          .getObject();
+        this.getView()
+          .getModel("local")
+          .setProperty("/Applicants", jonApplicationInterview);
+        this.getView().getModel("local").refresh(true);
+      }
     });
   }
 );

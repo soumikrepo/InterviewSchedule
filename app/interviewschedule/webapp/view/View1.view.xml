@@ -65,12 +65,10 @@
                                             id="CandidateScheduleBtn"
                                             press="onCandidateToSchedule"
                                         />
-                                        <Button
+                                        <Text
                                             text="{local>JobInterviewCount} not started"
-                                            type="Default"
                                             class="sapUiSmallMarginEnd"
-                                            press = "onPressAppInterview"
-                                             id="NotStartedBtn"
+            
                                         />
                                     </FlexBox>
                                     <Panel

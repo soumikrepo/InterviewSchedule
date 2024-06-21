@@ -1,0 +1,12 @@
+<mvc:View
+    controllerName="com.app.interviewschedule.controller.View2"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:card="sap.f.cards"
+    height="100%"
+>
+<Text text="Second View"></Text>
+
+</mvc:View>

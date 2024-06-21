@@ -1,16 +1,45 @@
 <core:FragmentDefinition
     xmlns="sap.m"
     xmlns:core="sap.ui.core"
-    xmlns:f="sap.ui.layout.form"
+    xmlns:f="sap.f"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:card="sap.f.cards"
 >
     <Dialog
         id="popup"
         draggable="true"
-        resizable="true"
+        resizable="false"
+        contentWidth="40%"
+        contentHeight="40%"
     >
         <content>
-          
+            <FlexBox  
+            items="{local>/currentApplications}"
+            wrap="Wrap"
+            justifyContent="Center"
+            >
+                <GenericTile
+                    width="15em"
+                    class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom"
+                    header="{local>firstName} {local>lastName}"
+                    frameType="OneByHalf"
+                    press="onPressCard"
+                    id="idTile"
+
+                >
+                    <TileContent>
+                        <VBox >
+                            <HBox>
+                                <Label text="Email :" />
+                                <Text text="{local>contactEmail}" />
+                            </HBox>
+                            
+                        </VBox>
+                    </TileContent>
+                </GenericTile>
+            </FlexBox>
         </content>
+
         <footer>
             <Toolbar>
                 <ToolbarSpacer />
@@ -18,14 +47,13 @@
                 <Button
                     type="Accept"
                     text="Start Scheduling"
-                    press="saveDialog"
+                    press="StartScheduleBtn"
                 />
 
                 <Button
-                    id="Clear"
                     text="Cancel"
                     type="Reject"
-                    press="clearDialog"
+                    press="cancelDialog"
                     ariaHasPopup="Dialog"
                 />
             </Toolbar>

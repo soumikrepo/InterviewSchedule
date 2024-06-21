@@ -8,8 +8,8 @@
     <Dialog
         id="popup"
         draggable="true"
-        resizable="false"
-        contentWidth="40%"
+        resizable="true"
+        contentWidth="50%"
         contentHeight="40%"
     >
         <content>

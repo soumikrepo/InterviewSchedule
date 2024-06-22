@@ -176,12 +176,12 @@ sap.ui.define(
         }
       },
 
-      StartScheduleBtn: function (oEvent) {
-        debugger
-       this.oRouter.navTo("RouteView2",{
+      StartScheduleBtn: function () {
 
+        this.oRouter.navTo("RouteView2", {
+          variable: this.getView().getModel("local").getProperty("/ApplicantId")
 
-       })
+        })
       },
 
       cancelDialog: function (oEvent) {
@@ -248,6 +248,12 @@ sap.ui.define(
 
       oCandidateToSchedulePopup: null,
       onCandidateToSchedule: function (oEvent) {
+
+        // Reset the ApplicantId property in the local model
+        this.getView()
+          .getModel("local") // Get the "local" model from the view
+          .setProperty("/ApplicantId", ""); // Set the "ApplicantsId" property to an empty string
+
         const { jobApplications } = oEvent
 
           .getSource()
@@ -281,15 +287,15 @@ sap.ui.define(
       },
 
       onPressCard: function (oEvent) {
-       debugger
-        const { jonApplicationInterview } = oEvent
+
+        const { applicationId } = oEvent
 
           .getSource()
           .getBindingContext("local")
           .getObject();
         this.getView()
           .getModel("local")
-          .setProperty("/Applicants", jonApplicationInterview);
+          .setProperty("/ApplicantId", applicationId);
         this.getView().getModel("local").refresh(true);
       }
     });

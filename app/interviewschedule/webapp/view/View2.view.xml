@@ -5,56 +5,73 @@
     xmlns:unified="sap.ui.unified"
     xmlns="sap.m"
 >
-    <VBox>
+    <ScrollContainer
+        height="100%"
+        width="100%"
+        vertical="true"
+        horizontal="false"
+    >
+        <VBox>
 
-        <OverflowToolbar
-            height="100%"
-            width="100%"
-        >
-            <Label text="Appointment Actions : " />
-            <ToggleButton
-                text="Drag and Drop"
-                id="enableAppointmentsDragAndDrop"
-            />
-            <ToggleButton
-                text="Drag and Create"
-                id="enableAppointmentsCreate"
-            />
-            <ToggleButton
-                text="Resize"
-                id="enableAppointmentsResize"
-            />
-        </OverflowToolbar>
 
-        <SinglePlanningCalendar
-            appointmentSelect="handleAppointmentSelect"
-            class="sapUiSmallMarginTop"
-            title="My Calendar"
-            appointments="{path: '/appointments'}"
-        >
-            <actions>
-                <Button
-                    id="addNewAppointment"
-                    text="Create"
-                    tooltip="Add new appointment"
+            <OverflowToolbar
+                height="100%"
+                width="100%"
+            >
+                <Label text="Appointment Actions : " />
+                <ToggleButton
+                    text="Drag and Drop"
+                    id="enableAppointmentsDragAndDrop"
                 />
-                <Button
-                    id="legendButton"
-                    icon="sap-icon://legend"
-                    tooltip="Open SinglePlanningCalendar legend"
-                    ariaHasPopup="Dialog"
+                <ToggleButton
+                    text="Drag and Create"
+                    id="enableAppointmentsCreate"
                 />
-            </actions>
-            <appointments>
-                <unified:CalendarAppointment
-                    title="{title}"
-                    text="{text}"
-                    type="{type}"
-                    icon="{icon}"
-                    startDate="{startDate}"
-                    endDate="{endDate}"
+                <ToggleButton
+                    text="Resize"
+                    id="enableAppointmentsResize"
                 />
-            </appointments>
-        </SinglePlanningCalendar>
-    </VBox>
+            </OverflowToolbar>
+
+
+            <SinglePlanningCalendar
+                appointmentSelect="handleAppointmentSelect"
+                class="sapUiSmallMarginTop"
+                title="Interview Schedule Calendar"
+                startDate="{path: 'local>/StartingDate'}"
+                appointments="{path: 'local>/appointments'}"
+            >
+                <actions>
+                    <Button
+                        id="addNewAppointment"
+                        text="Create"
+                        tooltip="Add new appointment"
+                        press="handleAppointmentCreate"
+                    />
+        
+                </actions>
+                <views>
+                    <SinglePlanningCalendarDayView key="DayView" title="Day" />
+                    <SinglePlanningCalendarWorkWeekView key="WorkWeekView" title="Work Week" />
+                    <SinglePlanningCalendarWeekView key="WeekView" title="Week" />
+                    <SinglePlanningCalendarMonthView key="MonthView" title="Month" />
+                </views>
+                <appointments>
+                    <unified:CalendarAppointment
+                        applicationInterviewId="{local>applicationInterviewId}"
+                        startDate="{local>startDate}"
+                        endDate="{local>endDate}"
+                        candSlotMapId="{local>candSlotMapId}"
+                        recruitEventStaffId="{local>recruitEventStaffId}"
+                        isTimeSet="{local>isTimeSet}"
+                        source="{local>source}"
+                        applicationId="{local>applicationId}"
+                        status="{local>status}"
+                        notes="{local>notes}"
+                        color="#FF0000"
+                    />
+                </appointments>
+            </SinglePlanningCalendar>
+        </VBox>
+    </ScrollContainer>
 </mvc:View>

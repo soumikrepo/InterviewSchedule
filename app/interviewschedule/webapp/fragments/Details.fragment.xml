@@ -33,25 +33,18 @@
             />
             <Text
                 id="moreInfoText"
-                text="{text}"
             />
             <Label
                 text="From"
                 labelFor="startDate"
             />
-            <Text text="{path: 'startDate',formatter:'.formatDate'}" />
+            <Text text="{path: 'local>/currentAppoinments/startDate', formatter:'.formatDate'}" />
             <Label
                 text="To"
                 labelFor="endDate"
             />
-            <Text text="{
-						path: 'endDate',formatter:'.formatDate'}" />
-            <CheckBox
-                id="allDayText"
-                text="All-day"
-                selected="{allDay>/allDay}"
-                enabled="false"
-            />
+            <Text text="{path: 'local>/currentAppoinments/endDate', formatter:'.formatDate'}" />
+
             <Label
                 text="Type"
                 labelFor="appType"

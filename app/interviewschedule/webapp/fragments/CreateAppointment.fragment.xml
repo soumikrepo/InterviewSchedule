@@ -16,14 +16,10 @@
                     <core:Title text="Information Of Interview" />
 
                     <Label text="Application Id" />
-                    <ComboBox items="{local>/JOBREQ/PATH}">
-                        <items>
-                            <core:Item
-                                key="{local>applicationId}"
-                                text="{local>applicationId}"
-                            />
-                        </items>
-                    </ComboBox>
+                    <Input
+                        width="auto"
+                        value="{local>/AppoinmentDetails/app_id}"
+                    />
 
                     <Label text="Application Interview Id" />
                     <Input
@@ -61,7 +57,7 @@
                         placeholder="Enter Start Date"
                         change="handleChange"
                         class="sapUiSmallMarginBottom"
-                        value="{local>/interviewData/startDate}"
+                        value="{local>/AppoinmentDetails/start_date}"
                         width="auto"
                     />
 
@@ -71,7 +67,7 @@
                         placeholder="Enter End Date"
                         change="handleChange"
                         class="sapUiSmallMarginBottom"
-                        value="{local>/interviewData/endDate}"
+                        value="{local>/AppoinmentDetails/end_date}"
                         width="auto"
                     />
 

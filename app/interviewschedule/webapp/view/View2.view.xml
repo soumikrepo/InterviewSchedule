@@ -35,6 +35,7 @@
 
 
             <SinglePlanningCalendar
+                id="SPC1"
                 appointmentSelect="handleAppointmentSelect"
                 class="sapUiSmallMarginTop"
                 title="Interview Schedule Calendar"
@@ -58,7 +59,7 @@
                 </views>
                 <appointments>
                     <unified:CalendarAppointment
-                
+                        
                         startDate="{local>startDate}"
                         endDate="{local>endDate}"
                         color="#FF0000"

@@ -32,10 +32,10 @@ sap.ui.define(
         let aApplicationIds = []
 
         //Getting the ApplicationId 
-        var AppId = oEvent.getParameter("arguments").variable
+        this.AppId = oEvent.getParameter("arguments").variable
 
         //Application Ids Array 
-        aApplicationIds = [...aApplicationIds, AppId]
+        aApplicationIds = [...aApplicationIds, this.AppId]
 
         // Job applications filter 
         const aJobApplicationfilters = aApplicationIds.map(
@@ -59,14 +59,24 @@ sap.ui.define(
         //Creating the Json model
         var oModel = new JSONModel({
           appointments: aData,
-          StartingDate: UI5Date.getInstance("2022", "0", "22"),
+          StartingDate: UI5Date.getInstance("2021", "10", "26"),
+          AppoinmentDetails:
+          {
+            "start_date" : this.formatDate(this.getView().byId("SPC1").getStartDate()),
+            "end_date" : this.formatDate(this.getView().byId("SPC1").getStartDate()),
+            "app_id": this.AppId,
+          }
         });
 
 
         //Set the Json Model to the View level
         this.getView().setModel(oModel, "local");
 
+        
+
       },
+
+      //++++++++++This event will be trigger when we will click on any event+++++++++++++++
 
       handleAppointmentSelect: function (oEvent) {
 
@@ -80,7 +90,6 @@ sap.ui.define(
         if (oAppointment === undefined) {
           return;
         }
-        // bAllDate = false;
 
 
 
@@ -108,55 +117,58 @@ sap.ui.define(
         });
 
       },
-      
-      oCreateAppoinmentPopup : null,
-      handleAppointmentCreate : function(oEvent)
-      {   
-          var that = this;
-          
-          if(!this.oCreateAppoinmentPopup)
-          {
-              Fragment.load({
-                  
-                  name : "com.app.interviewschedule.fragments.CreateAppointment",
-                  controller : this,
-                  id : "create"
-              }).then(function(oFragment){
-                  that.oCreateAppoinmentPopup = oFragment;
-                  that.getView().addDependent(that.oCreateAppoinmentPopup)
-                  that.oCreateAppoinmentPopup.setTitle("Create new appoinment")
-                  that.oCreateAppoinmentPopup.open();
-              })
-          }
 
-          else
-          {
-              this.oCreateAppoinmentPopup.open();
-          }
+
+      //++++++++++++++++++++++Create appoinment dialog+++++++++++++++++++++++++++++++++++
+
+      oCreateAppoinmentPopup: null,
+      handleAppointmentCreate: function (oEvent) {
+        this.AppId
+        var that = this;
+
+        if (!this.oCreateAppoinmentPopup) {
+          Fragment.load({
+
+            name: "com.app.interviewschedule.fragments.CreateAppointment",
+            controller: this,
+            id: "create"
+          }).then(function (oFragment) {
+            that.oCreateAppoinmentPopup = oFragment;
+            that.getView().addDependent(that.oCreateAppoinmentPopup)
+            that.oCreateAppoinmentPopup.setTitle("Create new appoinment")
+            that.oCreateAppoinmentPopup.open();
+          })
+        }
+
+        else {
+          this.oCreateAppoinmentPopup.open();
+        }
       },
 
-      closeDialog : function(oEvent)
-      {
+
+      // ++++++++++++++++ Close Popup +++++++++++++++++++++
+      closeDialog: function (oEvent) {
         oEvent.getSource().getParent().getParent().close()
       },
 
 
+      // ++++++++++++++++++++ Function to formate the data +++++++++++++++++++++++++
       formatDate: function (oDate) {
         if (oDate) {
-            var iHours = oDate.getHours(),
-                iMinutes = oDate.getMinutes(),
-                iSeconds = oDate.getSeconds();
-    
-            // Define a custom date format with desired pattern
-            var oDateFormat = sap.ui.core.format.DateFormat.getDateTimeInstance({
-                pattern: "dd MMM yyyy, HH:mm:ss"
-            });
-    
-            return oDateFormat.format(oDate);
+          var iHours = oDate.getHours(),
+            iMinutes = oDate.getMinutes(),
+            iSeconds = oDate.getSeconds();
+
+          // Define a custom date format with desired pattern
+          var oDateFormat = sap.ui.core.format.DateFormat.getDateTimeInstance({
+            pattern: "dd MMM yyyy, HH:mm:ss"
+          });
+
+          return oDateFormat.format(oDate);
         }
-    },
-    
-      // Get Data function implementation
+      },
+
+      // ++++++++++++++++++ getData function implementation ++++++++++++++++++++++++++++
       getData: async function (
         oDataModel,
         sPath,

@@ -22,6 +22,7 @@
                 <ToggleButton
                     text="Drag and Drop"
                     id="enableAppointmentsDragAndDrop"
+                    pressed="{local>/enableAppointmentsDragAndDrop}"
                 />
                 <!-- <ToggleButton
                     text="Drag and Create"
@@ -30,6 +31,7 @@
                 <ToggleButton
                     text="Resize"
                     id="enableAppointmentsResize"
+                    pressed="{local>/enableAppointmentsResize}"
                 />
             </OverflowToolbar>
 
@@ -37,9 +39,13 @@
             <SinglePlanningCalendar
                 id="SPC1"
                 appointmentSelect="handleAppointmentSelect"
+                appointmentDrop = "handleAppointmentDrop"
+                appointmentResize="handleAppointmentResize"
                 class="sapUiSmallMarginTop"
                 title="Interview Schedule Calendar"
                 startDate="{path: 'local>/StartingDate'}"
+                enableAppointmentsDragAndDrop="{local>/enableAppointmentsDragAndDrop}"
+                enableAppointmentsResize="{local>/enableAppointmentsResize}"
                 appointments="{path: 'local>/appointments'}"
             >
                 <actions>

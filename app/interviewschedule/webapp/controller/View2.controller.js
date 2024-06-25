@@ -9,8 +9,10 @@ sap.ui.define(
     "sap/ui/core/format/DateFormat",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    "sap/m/MessageBox",
+    "sap/m/MessageToast"
   ],
-  function (BaseController, formatter, JSONModel, UI5Date, unifiedLibrary, Fragment, DateFormat, Filter, FilterOperator) {
+  function (BaseController, formatter, JSONModel, UI5Date, unifiedLibrary, Fragment, DateFormat, Filter, FilterOperator, MessageBox, MessageToast) {
     "use strict";
 
     //Selecting the calendar type 
@@ -19,7 +21,7 @@ sap.ui.define(
     return BaseController.extend("com.app.interviewschedule.controller.View2", {
 
       //Setting the formatter
-      formatter : formatter,
+      formatter: formatter,
       // +++++++++++++++++++++++++++++++ Defined the onInit function +++++++++++++++++++++++++++++++++++++
       onInit: function () {
 
@@ -63,19 +65,23 @@ sap.ui.define(
         var oModel = new JSONModel({
           appointments: aData,
           StartingDate: UI5Date.getInstance("2021", "10", "26"),
+
+          // This Object we are using for creating the new Appoinment Popup
           AppoinmentDetails:
           {
-            "start_date" : this.formatter.StartDateHardCodedTime(this.getView().byId("SPC1").getStartDate()),
-            "end_date" : this.formatter.EndDateHardCodedTime(this.getView().byId("SPC1").getStartDate()),
+            "start_date": this.formatter.StartDateHardCodedTime(this.getView().byId("SPC1").getStartDate()),
+            "end_date": this.formatter.EndDateHardCodedTime(this.getView().byId("SPC1").getStartDate()),
             "app_id": this.AppId,
-          }
+          },
+          enableAppointmentsDragAndDrop: true,
+          enableAppointmentsResize: true,
         });
 
 
         //Set the Json Model to the View level
         this.getView().setModel(oModel, "local");
 
-        
+
 
       },
 
@@ -148,7 +154,59 @@ sap.ui.define(
         }
       },
 
+      // +++++++++++++ Here we are Drop the Appoinment after Drag +++++++++++++++++++++
 
+      handleAppointmentDrop: function (oEvent) {
+        
+        var oAppointment = oEvent.getParameter("appointment")
+        var oStartDate = oEvent.getParameter("startDate")
+        var oEndDate = oEvent.getParameter("endDate")
+        var bCopy = oEvent.getParameter("copy")
+        var sAppointmentTitle = oAppointment.getTitle()
+        var oModel = this.getView().getModel("local")
+        var oNewAppoinment;
+
+        if (bCopy) {
+          oNewAppoinment = {
+            title: sAppointmentTitle,
+            icon: oAppointment.getIcon(),
+            // text: oAppointment.getText(),
+            type: oAppointment.getType(),
+            startDate: oStartDate,
+            endDate: oEndDate
+          };
+          oModel.getData().appointments.push(oNewAppoinment);
+          oModel.updateBindings();
+        } else {
+          oAppointment.setStartDate(oStartDate);
+          oAppointment.setEndDate(oEndDate);
+        }
+
+        MessageToast.show("Appointment with title \n'"
+          + sAppointmentTitle
+          + "'\n has been " + (bCopy ? "create" : "moved")
+        );
+      },
+
+
+      //+++++++++++++++++++++ Here we resize the Appoinment ++++++++++++++++++++++++
+
+      handleAppointmentResize: function (oEvent) {
+
+        debugger
+        var oAppointment = oEvent.getParameter("appointment"),
+          oStartDate = oEvent.getParameter("startDate"),
+          oEndDate = oEvent.getParameter("endDate"),
+          sAppointmentTitle = oAppointment.getTitle();
+
+        oAppointment.setStartDate(oStartDate);
+        oAppointment.setEndDate(oEndDate);
+
+        MessageToast.show("Appointment with title \n'"
+          + sAppointmentTitle
+          + "'\n has been resized"
+        );
+      },
       // ++++++++++++++++ Close Popup +++++++++++++++++++++
       closeDialog: function (oEvent) {
         oEvent.getSource().getParent().getParent().close()

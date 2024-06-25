@@ -20,6 +20,8 @@ sap.ui.define(
     "use strict";
 
     return Controller.extend("com.app.interviewschedule.controller.View1", {
+
+      
       onInit: function () {
         this.oRouter = this.getOwnerComponent().getRouter();
         this._initialSetup();

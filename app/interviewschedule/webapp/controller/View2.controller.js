@@ -1,6 +1,7 @@
 sap.ui.define(
   [
     "sap/ui/core/mvc/Controller",
+    "com/app/interviewschedule/Util/formatter",
     "sap/ui/model/json/JSONModel",
     "sap/ui/core/date/UI5Date",
     "sap/ui/unified/library",
@@ -9,7 +10,7 @@ sap.ui.define(
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
   ],
-  function (BaseController, JSONModel, UI5Date, unifiedLibrary, Fragment, DateFormat, Filter, FilterOperator) {
+  function (BaseController, formatter, JSONModel, UI5Date, unifiedLibrary, Fragment, DateFormat, Filter, FilterOperator) {
     "use strict";
 
     //Selecting the calendar type 
@@ -17,6 +18,8 @@ sap.ui.define(
 
     return BaseController.extend("com.app.interviewschedule.controller.View2", {
 
+      //Setting the formatter
+      formatter : formatter,
       // +++++++++++++++++++++++++++++++ Defined the onInit function +++++++++++++++++++++++++++++++++++++
       onInit: function () {
 
@@ -62,8 +65,8 @@ sap.ui.define(
           StartingDate: UI5Date.getInstance("2021", "10", "26"),
           AppoinmentDetails:
           {
-            "start_date" : this.formatDate(this.getView().byId("SPC1").getStartDate()),
-            "end_date" : this.formatDate(this.getView().byId("SPC1").getStartDate()),
+            "start_date" : this.formatter.StartDateHardCodedTime(this.getView().byId("SPC1").getStartDate()),
+            "end_date" : this.formatter.EndDateHardCodedTime(this.getView().byId("SPC1").getStartDate()),
             "app_id": this.AppId,
           }
         });
@@ -152,21 +155,6 @@ sap.ui.define(
       },
 
 
-      // ++++++++++++++++++++ Function to formate the data +++++++++++++++++++++++++
-      formatDate: function (oDate) {
-        if (oDate) {
-          var iHours = oDate.getHours(),
-            iMinutes = oDate.getMinutes(),
-            iSeconds = oDate.getSeconds();
-
-          // Define a custom date format with desired pattern
-          var oDateFormat = sap.ui.core.format.DateFormat.getDateTimeInstance({
-            pattern: "dd MMM yyyy, HH:mm:ss"
-          });
-
-          return oDateFormat.format(oDate);
-        }
-      },
 
       // ++++++++++++++++++ getData function implementation ++++++++++++++++++++++++++++
       getData: async function (

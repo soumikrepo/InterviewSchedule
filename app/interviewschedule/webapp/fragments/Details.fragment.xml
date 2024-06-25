@@ -38,12 +38,12 @@
                 text="From"
                 labelFor="startDate"
             />
-            <Text text="{path: 'local>/currentAppoinments/startDate', formatter:'.formatDate'}" />
+            <Text text="{path: 'local>/currentAppoinments/startDate', formatter:'.formatter.FormatDate'}" />
             <Label
                 text="To"
                 labelFor="endDate"
             />
-            <Text text="{path: 'local>/currentAppoinments/endDate', formatter:'.formatDate'}" />
+            <Text text="{path: 'local>/currentAppoinments/endDate', formatter:'.formatter.FormatDate'}" />
 
             <Label
                 text="Type"

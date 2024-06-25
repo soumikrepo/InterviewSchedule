@@ -13,7 +13,7 @@
         <content>
             <f:SimpleForm>
                 <f:content>
-                    <core:Title text="Information Of Interview" />
+                    <core:Title text="Information Of Appoinment" />
 
                     <Label text="Application Id" />
                     <Input
@@ -95,13 +95,13 @@
                     press="saveDialog"
                 />
 
-                <Button
+                <!-- <Button
                     id="Clear"
                     text="Clear"
                     type="Reject"
                     press="clearDialog"
                     ariaHasPopup="Dialog"
-                />
+                /> -->
 
                 <Button
                     type="Reject"

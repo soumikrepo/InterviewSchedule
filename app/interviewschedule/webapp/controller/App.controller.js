@@ -1,14 +1,11 @@
 sap.ui.define(
     [
-        "sap/ui/core/mvc/Controller",
-        "com/app/interviewschedule/Util/formatter"
+        "sap/ui/core/mvc/Controller"
     ],
-    function(BaseController, formatter) {
+    function(BaseController) {
       "use strict";
   
       return BaseController.extend("com.app.interviewschedule.controller.App", {
-        
-        Formatter : formatter,
         onInit: function() {
         }
       });

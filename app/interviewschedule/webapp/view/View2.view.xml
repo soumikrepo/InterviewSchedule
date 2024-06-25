@@ -23,10 +23,10 @@
                     text="Drag and Drop"
                     id="enableAppointmentsDragAndDrop"
                 />
-                <ToggleButton
+                <!-- <ToggleButton
                     text="Drag and Create"
                     id="enableAppointmentsCreate"
-                />
+                /> -->
                 <ToggleButton
                     text="Resize"
                     id="enableAppointmentsResize"

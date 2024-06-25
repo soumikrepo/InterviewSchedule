@@ -108,6 +108,37 @@ sap.ui.define(
         });
 
       },
+      
+      oCreateAppoinmentPopup : null,
+      handleAppointmentCreate : function(oEvent)
+      {   
+          var that = this;
+          
+          if(!this.oCreateAppoinmentPopup)
+          {
+              Fragment.load({
+                  
+                  name : "com.app.interviewschedule.fragments.CreateAppointment",
+                  controller : this,
+                  id : "create"
+              }).then(function(oFragment){
+                  that.oCreateAppoinmentPopup = oFragment;
+                  that.getView().addDependent(that.oCreateAppoinmentPopup)
+                  that.oCreateAppoinmentPopup.setTitle("Create new appoinment")
+                  that.oCreateAppoinmentPopup.open();
+              })
+          }
+
+          else
+          {
+              this.oCreateAppoinmentPopup.open();
+          }
+      },
+
+      closeDialog : function(oEvent)
+      {
+        oEvent.getSource().getParent().getParent().close()
+      },
 
 
       formatDate: function (oDate) {

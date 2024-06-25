@@ -44,7 +44,7 @@
                 <actions>
                     <Button
                         id="addNewAppointment"
-                        text="Create"
+                        text="Create new appoinment"
                         tooltip="Add new appointment"
                         press="handleAppointmentCreate"
                     />
@@ -58,17 +58,11 @@
                 </views>
                 <appointments>
                     <unified:CalendarAppointment
-                        applicationInterviewId="{local>applicationInterviewId}"
+                
                         startDate="{local>startDate}"
                         endDate="{local>endDate}"
-                        candSlotMapId="{local>candSlotMapId}"
-                        recruitEventStaffId="{local>recruitEventStaffId}"
-                        isTimeSet="{local>isTimeSet}"
-                        source="{local>source}"
-                        applicationId="{local>applicationId}"
-                        status="{local>status}"
-                        notes="{local>notes}"
                         color="#FF0000"
+                        icon="sap-icon://study-leave"
                     />
                 </appointments>
             </SinglePlanningCalendar>

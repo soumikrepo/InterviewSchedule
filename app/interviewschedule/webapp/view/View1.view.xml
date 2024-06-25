@@ -8,7 +8,6 @@
     xmlns:card="sap.f.cards"
     height="100%"
 >
-
     <ScrollContainer
         height="100%"
         width="100%"
@@ -25,16 +24,14 @@
                 <IconTabFilter text="JOB REQUISITION">
                     <FlexBox
                         direction="Row"
-                        justifyContent="SpaceAround"
                         wrap="Wrap"
+                        justifyContent="Center"
                         alignItems="Center"
                         items="{local>/JOBREQ}"
-                    
                     >
                         <f:Card
-                            class="sapUiMediumMarginBottom"
-                            width="30em"
-                            height="100%"
+                            class="sapUiSmallMarginBeginEnd sapUiSmallMarginTopBottom"
+                            width="25em"
                         >
                             <f:header>
                                 <card:Header
@@ -47,17 +44,13 @@
                                     width="100%"
                                     class="sapUiContentPadding"
                                 >
-                                    <Text
-                                        text="{local>jobReqId}"
-                                        class="sapUiMediumMarginBegin  sapUiSmallMarginTop"
-                                    />
-
                                     <FlexBox
                                         width="auto"
                                         height="auto"
                                         alignItems="Center"
-                                        justifyContent="SpaceAround"      
-                                        id="2ndflexbox"        
+                                        justifyContent="SpaceAround"
+                                        class="sapUiSmallMarginTop"
+                                        id="2ndflexbox"
                                     >
                                         <Button
                                             text="{local>JobApplicationCount} Candidates to schedule"
@@ -65,12 +58,9 @@
                                             id="CandidateScheduleBtn"
                                             press="onCandidateToSchedule"
                                         />
-                                        <Button
+                                        <Text
                                             text="{local>JobInterviewCount} not started"
-                                            type="Default"
                                             class="sapUiSmallMarginEnd"
-                                            press = "onPressAppInterview"
-                                             id="NotStartedBtn"
                                         />
                                     </FlexBox>
                                     <Panel
@@ -80,9 +70,7 @@
                                         width="auto"
                                         class="sapUiResponsiveMargin"
                                     >
-                                    <content>
-                                  
-                                    </content>
+                                        <content />
                                     </Panel>
                                 </VBox>
                             </f:content>

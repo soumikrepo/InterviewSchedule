@@ -1,0 +1,114 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:card="sap.f.cards"
+>
+    <Dialog
+        id="popup"
+        resizable="false"
+        draggable="true"
+    >
+        <content>
+            <f:SimpleForm>
+                <f:content>
+                    <core:Title text="Information Of Appoinment" />
+
+                    <Label text="Application Id" />
+                    <Input
+                        width="auto"
+                        value="{local>/AppoinmentDetails/app_id}"
+                    />
+
+                    <Label text="Application Interview Id" />
+                    <Input
+                        width="auto"
+                        value="{local>/interviewData/applicationInterviewId}"
+                    />
+
+                    <Label text="Candidate Slot Map Id" />
+                    <Input
+                        width="auto"
+                        value="{local>/interviewData/candSlotMapId}"
+                    />
+
+                    <Label text="is Time Set" />
+                    <Input
+                        width="auto"
+                        value="{local>/interviewData/isTimeSet}"
+                    />
+
+                    <Label text="Source" />
+                    <Input
+                        width="auto"
+                        value="{local>/interviewData/source}"
+                    />
+
+                    <Label text="Status" />
+                    <Input
+                        width="auto"
+                        value="{local>/interviewData/status}"
+                    />
+
+                    <Label text="Start date" />
+                    <DateTimePicker
+                        id="DTP1"
+                        placeholder="Enter Start Date"
+                        change="handleChange"
+                        class="sapUiSmallMarginBottom"
+                        value="{local>/AppoinmentDetails/start_date}"
+                        width="auto"
+                    />
+
+                    <Label text="End date" />
+                    <DateTimePicker
+                        id="DTP2"
+                        placeholder="Enter End Date"
+                        change="handleChange"
+                        class="sapUiSmallMarginBottom"
+                        value="{local>/AppoinmentDetails/end_date}"
+                        width="auto"
+                    />
+
+                    <Label text="Note" />
+                    <TextArea
+                        id="TextArea"
+                        placeholder="Enter text"
+                        maxLength="100"
+                        change="handleChange"
+                        showExceededText="true"
+                        rows="4"
+                        value="{local>/interviewData/notes}"
+                    />
+                </f:content>
+            </f:SimpleForm>
+        </content>
+
+        <footer>
+            <Toolbar>
+                <ToolbarSpacer />
+
+                <Button
+                    type="Accept"
+                    text="Save"
+                    press="saveDialog"
+                />
+
+                <!-- <Button
+                    id="Clear"
+                    text="Clear"
+                    type="Reject"
+                    press="clearDialog"
+                    ariaHasPopup="Dialog"
+                /> -->
+
+                <Button
+                    type="Reject"
+                    text="Close"
+                    press="closeDialog"
+                />
+            </Toolbar>
+        </footer>
+    </Dialog>
+</core:FragmentDefinition>

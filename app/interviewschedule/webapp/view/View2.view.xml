@@ -70,8 +70,10 @@
                         endDate="{local>endDate}"
                         color="#FF0000"
                         icon="sap-icon://study-leave"
+                        
                     />
                 </appointments>
+                
             </SinglePlanningCalendar>
         </VBox>
     </ScrollContainer>

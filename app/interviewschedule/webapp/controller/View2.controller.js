@@ -15,8 +15,6 @@ sap.ui.define(
   function (BaseController, formatter, JSONModel, UI5Date, unifiedLibrary, Fragment, DateFormat, Filter, FilterOperator, MessageBox, MessageToast) {
     "use strict";
 
-    //Selecting the calendar type 
-    let CalendarDayType = unifiedLibrary.CalendarDayType;
 
     return BaseController.extend("com.app.interviewschedule.controller.View2", {
 
@@ -69,8 +67,8 @@ sap.ui.define(
           // This Object we are using for creating the new Appoinment Popup
           AppoinmentDetails:
           {
-            "start_date": this.formatter.StartDateHardCodedTime(this.getView().byId("SPC1").getStartDate()),
-            "end_date": this.formatter.EndDateHardCodedTime(this.getView().byId("SPC1").getStartDate()),
+            "start_date": formatter.StartDateHardCodedTime(this.getView().byId("SPC1").getStartDate()),
+            "end_date": formatter.EndDateHardCodedTime(this.getView().byId("SPC1").getStartDate()),
             "app_id": this.AppId,
           },
           enableAppointmentsDragAndDrop: true,
@@ -140,7 +138,7 @@ sap.ui.define(
 
             name: "com.app.interviewschedule.fragments.CreateAppointment",
             controller: this,
-            id: "create"
+            id: that.getView().getId()
           }).then(function (oFragment) {
             that.oCreateAppoinmentPopup = oFragment;
             that.getView().addDependent(that.oCreateAppoinmentPopup)
@@ -157,7 +155,7 @@ sap.ui.define(
       // +++++++++++++ Here we are Drop the Appoinment after Drag +++++++++++++++++++++
 
       handleAppointmentDrop: function (oEvent) {
-        
+
         var oAppointment = oEvent.getParameter("appointment")
         var oStartDate = oEvent.getParameter("startDate")
         var oEndDate = oEvent.getParameter("endDate")
@@ -193,7 +191,7 @@ sap.ui.define(
 
       handleAppointmentResize: function (oEvent) {
 
-        debugger
+
         var oAppointment = oEvent.getParameter("appointment"),
           oStartDate = oEvent.getParameter("startDate"),
           oEndDate = oEvent.getParameter("endDate"),
@@ -212,7 +210,25 @@ sap.ui.define(
         oEvent.getSource().getParent().getParent().close()
       },
 
+      // +++++++++++++++++++++++ When we click the AllDay checkbox +++++++++++++++++
+      handleCheckBoxSelect: function (oEvent) {
 
+        let AllDay = oEvent.getSource().getSelected(),
+          StartDate = this.getView().getModel("local").getProperty("/AppoinmentDetails").start_date,
+          EndDate = this.getView().getModel("local").getProperty("/AppoinmentDetails").end_date
+
+        if (AllDay) {
+          let ModifiedStartDate = formatter.removeTimePart(StartDate)
+          let ModifiedEndDate = formatter.removeTimePart(EndDate)
+
+          this.getView().byId("DTP1").setValue(ModifiedStartDate)
+          this.getView().byId("DTP2").setValue(ModifiedEndDate)
+        }
+        else {
+          this.getView().byId("DTP1").setValue(formatter.StartDateHardCodedTime(this.getView().byId("SPC1").getStartDate()))
+          this.getView().byId("DTP2").setValue(formatter.EndDateHardCodedTime(this.getView().byId("SPC1").getStartDate()))
+        }
+      },
 
       // ++++++++++++++++++ getData function implementation ++++++++++++++++++++++++++++
       getData: async function (

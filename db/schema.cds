@@ -32,6 +32,7 @@ entity JobApplicationInterview as
         source,
         startDate,
         status,
+        
     }
 
 entity JobApplication          as

@@ -70,6 +70,12 @@
                         value="{local>/AppoinmentDetails/end_date}"
                         width="auto"
                     />
+                    <CheckBox
+                    
+                    	id="allDay"
+						text="All-day"
+						select="handleCheckBoxSelect">
+                    </CheckBox>
 
                     <Label text="Note" />
                     <TextArea

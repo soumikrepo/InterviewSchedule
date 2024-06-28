@@ -20,8 +20,6 @@ sap.ui.define(
     "use strict";
 
     return Controller.extend("com.app.interviewschedule.controller.View1", {
-
-      
       onInit: function () {
         this.oRouter = this.getOwnerComponent().getRouter();
         this._initialSetup();
@@ -30,7 +28,8 @@ sap.ui.define(
 
       _initialSetup: function () {
         this.iSkip = 0;
-        this.iTop = 100;
+        this.iTop = 10;
+
         //Set the json model view level
         this.getView().setModel(
           new JSONModel({
@@ -60,6 +59,19 @@ sap.ui.define(
 
         //model object
         const oModel = this.getOwnerComponent().getModel();
+       
+
+        //Getting the count of Total Job Requisition
+        const JobReqCount = await this.getData(
+          oModel,
+          "/JobRequisition/$count",
+          [],
+          []
+        );
+
+        //Assign Count to Local model
+        this.getView().getModel("local").setProperty("/JobReqCount",JobReqCount);
+
 
         // Getting Job Req and Job Application
         const { results: aData } = await this.getData(
@@ -70,6 +82,10 @@ sap.ui.define(
           this.iTop,
           this.iSkip
         );
+        
+        //Getting the Count of Current Number of Job Requisition
+        this.getView().getModel("local").setProperty("/currentJobReqCount",aData.length);
+
         // Getting all the application Ids
         aData.forEach((applications) => {
           const aApplications = applications.jobApplications;
@@ -179,11 +195,11 @@ sap.ui.define(
       },
 
       StartScheduleBtn: function () {
-
         this.oRouter.navTo("RouteView2", {
-          variable: this.getView().getModel("local").getProperty("/ApplicantId")
-
-        })
+          variable: this.getView()
+            .getModel("local")
+            .getProperty("/ApplicantId"),
+        });
       },
 
       cancelDialog: function (oEvent) {
@@ -207,10 +223,8 @@ sap.ui.define(
         top ? (this.top = top) : "";
         skip ? (this.skip = skip) : "";
 
-        const oUrlParameters = {
-          $expand: aExpand,
-        };
-
+        const oUrlParameters = {};
+        aExpand.length > 0 ? (oUrlParameters.$expand = aExpand) : "";
         top ? (oUrlParameters.$top = top) : "";
         skip ? (oUrlParameters.$skip = skip) : "";
 
@@ -250,7 +264,6 @@ sap.ui.define(
 
       oCandidateToSchedulePopup: null,
       onCandidateToSchedule: function (oEvent) {
-
         // Reset the ApplicantId property in the local model
         this.getView()
           .getModel("local") // Get the "local" model from the view
@@ -270,26 +283,21 @@ sap.ui.define(
         var that = this;
         if (!this.oCandidateToSchedulePopup) {
           Fragment.load({
-
             name: "com.app.interviewschedule.fragments.CandidateDialog",
             controller: this,
-            id: "AppInterview"
+            id: "AppInterview",
           }).then(function (oFragment) {
             that.oCandidateToSchedulePopup = oFragment;
-            that.getView().addDependent(that.oCandidateToSchedulePopup)
-            that.oCandidateToSchedulePopup.setTitle("Select Candiates")
-            that.oCandidateToSchedulePopup.open()
-          })
-        }
-
-        else {
+            that.getView().addDependent(that.oCandidateToSchedulePopup);
+            that.oCandidateToSchedulePopup.setTitle("Select Candiates");
+            that.oCandidateToSchedulePopup.open();
+          });
+        } else {
           this.oCandidateToSchedulePopup.open();
         }
-
       },
 
       onPressCard: function (oEvent) {
-
         const { applicationId } = oEvent
 
           .getSource()
@@ -299,7 +307,31 @@ sap.ui.define(
           .getModel("local")
           .setProperty("/ApplicantId", applicationId);
         this.getView().getModel("local").refresh(true);
-      }
+      },
+
+      LoadTop: async function () {
+        
+        //Increase the Skip value
+        this.iSkip = this.iTop + this.iSkip;
+
+        // Getting Job Req and Job Application
+        const { results: aData } = await this.getData(
+          this.oModel,
+          "/JobRequisition",
+          [],
+          ["jobApplications"],
+          this.iTop,
+          this.iSkip
+        );
+        this.getView()
+          .getModel("local")
+          .getData()
+          .JOBREQ.push(...aData);
+        var currentValue = this.getView().getModel("local").getProperty("/currentJobReqCount")
+        var newValue = currentValue + 10;
+        this.getView().getModel("local").setProperty("/currentJobReqCount", newValue)
+        this.getView().getModel("local").refresh(true);
+      },
     });
   }
 );

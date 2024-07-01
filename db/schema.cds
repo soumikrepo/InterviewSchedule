@@ -43,8 +43,8 @@ entity JobApplication          as
         lastName,
         contactEmail,
         jobReqId,
-        jobApplicationInterview : Association to many JobApplicationInterview on jobApplicationInterview.applicationId = applicationId
-      
+        jobApplicationInterview : Association to many JobApplicationInterview on jobApplicationInterview.applicationId = applicationId,
+        cellPhone
     }
 
 entity User                    as

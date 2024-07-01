@@ -264,6 +264,7 @@ sap.ui.define(
 
       oCandidateToSchedulePopup: null,
       onCandidateToSchedule: function (oEvent) {
+          
         // Reset the ApplicantId property in the local model
         this.getView()
           .getModel("local") // Get the "local" model from the view

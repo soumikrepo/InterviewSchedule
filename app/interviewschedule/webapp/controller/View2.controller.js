@@ -41,6 +41,8 @@ sap.ui.define(
       },
 
       loadPage: async function (oEvent) {
+
+        debugger
         //Create Empty array
         let aApplicationIds = [];
 

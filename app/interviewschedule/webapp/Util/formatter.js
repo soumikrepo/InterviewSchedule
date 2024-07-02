@@ -1,11 +1,7 @@
-sap.ui.define([
+sap.ui.define([], function () {
+  "use strict";
 
-], function () {
-  'use strict';
-
-  return ({
-
-
+  return {
     FormatDate: function (oDate) {
       if (oDate) {
         var iHours = oDate.getHours(),
@@ -14,7 +10,7 @@ sap.ui.define([
 
         // Define a custom date format with desired pattern
         var oDateFormat = sap.ui.core.format.DateFormat.getDateTimeInstance({
-          pattern: "dd MMM yyyy, HH:mm:ss"
+          pattern: "dd MMM yyyy, HH:mm:ss",
         });
 
         return oDateFormat.format(oDate);
@@ -28,7 +24,7 @@ sap.ui.define([
 
         // Define a custom date format with desired pattern
         var oDateFormat = sap.ui.core.format.DateFormat.getDateTimeInstance({
-          pattern: "dd MMM yyyy, HH:mm:ss"
+          pattern: "dd MMM yyyy, HH:mm:ss",
         });
 
         return oDateFormat.format(oDate);
@@ -41,7 +37,7 @@ sap.ui.define([
 
         // Define a custom date format with desired pattern
         var oDateFormat = sap.ui.core.format.DateFormat.getDateTimeInstance({
-          pattern: "dd MMM yyyy, HH:mm:ss"
+          pattern: "dd MMM yyyy, HH:mm:ss",
         });
 
         return oDateFormat.format(oDate);
@@ -54,11 +50,11 @@ sap.ui.define([
 
       // Define a custom date format with the desired pattern
       const oDateFormat = sap.ui.core.format.DateFormat.getDateTimeInstance({
-        pattern: "dd MMM yyyy"
+        pattern: "dd MMM yyyy",
       });
 
       // Format the date object to the desired date string format
       return oDateFormat.format(date);
     }
-  })
+  };
 });

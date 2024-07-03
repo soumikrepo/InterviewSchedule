@@ -6,7 +6,7 @@ entity Position                as
     projection on sf_api_service.Position {
         code,
         positionTitle,
-    }
+    }   
 
 entity JobRequisition          as
     projection on sf_api_service.JobRequisition {
@@ -18,6 +18,13 @@ entity JobRequisition          as
         jobApplications : Association to  JobApplication on jobApplications.applicationId = jobReqId,
         positionNumber,
         
+    }
+
+    entity User                    as
+    projection on sf_api_service.User {
+        userId,
+        defaultFullName,
+        email,
     }
 
 entity JobApplicationInterview as
@@ -32,6 +39,7 @@ entity JobApplicationInterview as
         source,
         startDate,
         status,
+        // interviewer : Association to one User on interviewer.userId = $self
         
     }
 
@@ -47,9 +55,4 @@ entity JobApplication          as
         cellPhone
     }
 
-entity User                    as
-    projection on sf_api_service.User {
-        userId,
-        defaultFullName,
-        email,
-    }
+

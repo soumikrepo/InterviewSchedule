@@ -1,0 +1,27 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<SelectDialog
+		id="mySelectDialog"
+		noDataText="No such interviewer"
+		title="Select Interviewer"
+		search=".onSearch"
+		confirm="onDialogSelect"
+		cancel="onDialogClose"
+		multiSelect="true"
+	
+		draggable="true"
+		items="{
+			path: 'local>/Interviewer'
+		}">
+		
+		<StandardListItem
+
+			title="{local>defaultFullName}"
+			description="{local>email}"
+			icon="sap-icon://employee"
+			iconDensityAware="false"
+			iconInset="false"
+			type="Active" />
+	</SelectDialog>
+</core:FragmentDefinition>

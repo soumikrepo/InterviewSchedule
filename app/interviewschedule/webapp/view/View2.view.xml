@@ -1,80 +1,27 @@
 <mvc:View
-    controllerName="com.app.interviewschedule.controller.View2"
-    xmlns:mvc="sap.ui.core.mvc"
-    xmlns:core="sap.ui.core"
-    xmlns:unified="sap.ui.unified"
-    xmlns="sap.m"
->
-    <ScrollContainer
-        height="100%"
-        width="100%"
-        vertical="true"
-        horizontal="false"
+	controllerName="com.app.interviewschedule.controller.View2"
+	xmlns:core="sap.ui.core"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:unified="sap.ui.unified"
+	xmlns="sap.m">
+
+    <VBox class="sapUiSmallMargin">
+    <PlanningCalendar id="PC1" rows="{path: 'local>/selectedInterviewer'}">
+    <toolbarContent>
+        <Title text="Interview Schedule Calendar" titleStyle="H4"/>
+        <Button icon="sap-icon://sys-add" text="Add required interviewer" press="addNewInterviewer"></Button>
+    </toolbarContent>
+    
+    <rows>
+    
+    <PlanningCalendarRow 
+     icon="sap-icon://employee"
+     title="{local>defaultFullName}"
+     text="{local>email}"
     >
-        <VBox>
-
-
-            <OverflowToolbar
-                height="100%"
-                width="100%"
-            >
-                <Label text="Appointment Actions : " />
-                <ToggleButton
-                    text="Drag and Drop"
-                    id="enableAppointmentsDragAndDrop"
-                    pressed="{local>/enableAppointmentsDragAndDrop}"
-                />
-                <!-- <ToggleButton
-                    text="Drag and Create"
-                    id="enableAppointmentsCreate"
-                /> -->
-                <ToggleButton
-                    text="Resize"
-                    id="enableAppointmentsResize"
-                    pressed="{local>/enableAppointmentsResize}"
-                />
-            </OverflowToolbar>
-
-
-            <SinglePlanningCalendar
-                id="SPC1"
-                appointmentSelect="handleAppointmentSelect"
-                appointmentDrop = "handleAppointmentDrop"
-                appointmentResize="handleAppointmentResize"
-                class="sapUiSmallMarginTop"
-                title="Interview Schedule Calendar"
-                startDate="{path: 'local>/StartingDate'}"
-                enableAppointmentsDragAndDrop="{local>/enableAppointmentsDragAndDrop}"
-                enableAppointmentsResize="{local>/enableAppointmentsResize}"
-                appointments="{path: 'local>/appointments'}"
-            >
-                <actions>
-                    <Button
-                        id="addNewAppointment"
-                        text="Create new appoinment"
-                        tooltip="Add new appointment"
-                        press="handleAppointmentCreate"
-                    />
-        
-                </actions>
-                <views>
-                    <SinglePlanningCalendarDayView key="DayView" title="Day" />
-                    <SinglePlanningCalendarWorkWeekView key="WorkWeekView" title="Work Week" />
-                    <SinglePlanningCalendarWeekView key="WeekView" title="Week" />
-                    <SinglePlanningCalendarMonthView key="MonthView" title="Month" />
-                </views>
-                <appointments>
-                    <unified:CalendarAppointment
-                        
-                        startDate="{local>startDate}"
-                        endDate="{local>endDate}"
-                        color="#FF0000"
-                        icon="sap-icon://study-leave"
-                        
-                    />
-                </appointments>
-                
-            </SinglePlanningCalendar>
-        </VBox>
-    </ScrollContainer>
-</mvc:View>
+    
+    </PlanningCalendarRow>    
+    </rows>
+    </PlanningCalendar>
+    </VBox>
+    </mvc:View>

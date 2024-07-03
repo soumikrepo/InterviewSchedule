@@ -10,37 +10,49 @@ sap.ui.define(
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
-    "sap/m/MessageToast"
+    "sap/m/MessageToast",
   ],
-  function (BaseController, formatter, JSONModel, UI5Date, unifiedLibrary, Fragment, DateFormat, Filter, FilterOperator, MessageBox, MessageToast) {
+  function (
+    BaseController,
+    formatter,
+    JSONModel,
+    UI5Date,
+    unifiedLibrary,
+    Fragment,
+    DateFormat,
+    Filter,
+    FilterOperator,
+    MessageBox,
+    MessageToast
+  ) {
     "use strict";
 
-
     return BaseController.extend("com.app.interviewschedule.controller.View2", {
-
       //Setting the formatter
       formatter: formatter,
+
       // +++++++++++++++++++++++++++++++ Defined the onInit function +++++++++++++++++++++++++++++++++++++
       onInit: function () {
-
         this.oRouter = this.getOwnerComponent().getRouter();
         this.oRouter.getRoute("RouteView2").attachMatched(this.loadPage, this);
 
-
+        //Get the Date Object
+        this.currentDate = new Date();
       },
 
       loadPage: async function (oEvent) {
 
+        debugger
         //Create Empty array
-        let aApplicationIds = []
+        let aApplicationIds = [];
 
-        //Getting the ApplicationId 
-        this.AppId = oEvent.getParameter("arguments").variable
+        //Getting the ApplicationId
+        this.AppId = oEvent.getParameter("arguments").variable;
 
-        //Application Ids Array 
-        aApplicationIds = [...aApplicationIds, this.AppId]
+        //Application Ids Array
+        aApplicationIds = [...aApplicationIds, this.AppId];
 
-        // Job applications filter 
+        // Job applications filter
         const aJobApplicationfilters = aApplicationIds.map(
           (applicationId) =>
             new Filter("applicationId", FilterOperator.EQ, applicationId)
@@ -62,43 +74,44 @@ sap.ui.define(
         //Creating the Json model
         var oModel = new JSONModel({
           appointments: aData,
-          StartingDate: UI5Date.getInstance("2021", "10", "26"),
+
+          StartingDate: UI5Date.getInstance(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate()),
+          allDay: false,
 
           // This Object we are using for creating the new Appoinment Popup
-          AppoinmentDetails:
-          {
-            "start_date": formatter.StartDateHardCodedTime(this.getView().byId("SPC1").getStartDate()),
-            "end_date": formatter.EndDateHardCodedTime(this.getView().byId("SPC1").getStartDate()),
-            "app_id": this.AppId,
+          AppoinmentDetails: {
+            start_date: formatter.StartDateHardCodedTime(
+              this.getView().byId("SPC1").getStartDate()
+            ),
+            end_date: formatter.EndDateHardCodedTime(
+              this.getView().byId("SPC1").getStartDate()
+            ),
+            app_id: this.AppId,
           },
           enableAppointmentsDragAndDrop: true,
           enableAppointmentsResize: true,
         });
 
-
         //Set the Json Model to the View level
         this.getView().setModel(oModel, "local");
-
-
-
       },
 
       //++++++++++This event will be trigger when we will click on any event+++++++++++++++
 
       handleAppointmentSelect: function (oEvent) {
-
-
         var oAppointment = oEvent.getParameter("appointment"),
           oView = this.getView();
-        const AppoinmentData = oEvent.getParameter("appointment").getBindingContext("local").getObject()
-        this.getView().getModel("local").setProperty("/currentAppoinments", AppoinmentData);
-
+        const AppoinmentData = oEvent
+          .getParameter("appointment")
+          .getBindingContext("local")
+          .getObject();
+        this.getView()
+          .getModel("local")
+          .setProperty("/currentAppoinments", AppoinmentData);
 
         if (oAppointment === undefined) {
           return;
         }
-
-
 
         if (!oAppointment.getSelected() && this.AppoinmentPopup) {
           this.AppoinmentPopup.then(function (oFragment) {
@@ -107,12 +120,11 @@ sap.ui.define(
           return;
         }
 
-
         if (!this.AppoinmentPopup) {
           this.AppoinmentPopup = Fragment.load({
             id: oView.getId(),
             name: "com.app.interviewschedule.fragments.Details",
-            controller: this
+            controller: this,
           }).then(function (oFragment) {
             oView.addDependent(oFragment);
             return oFragment;
@@ -122,32 +134,27 @@ sap.ui.define(
           oFragment.setBindingContext(oAppointment.getBindingContext("local"));
           oFragment.openBy(oAppointment);
         });
-
       },
-
 
       //++++++++++++++++++++++Create appoinment dialog+++++++++++++++++++++++++++++++++++
 
       oCreateAppoinmentPopup: null,
       handleAppointmentCreate: function (oEvent) {
-        this.AppId
+        this.AppId;
         var that = this;
 
         if (!this.oCreateAppoinmentPopup) {
           Fragment.load({
-
             name: "com.app.interviewschedule.fragments.CreateAppointment",
             controller: this,
-            id: that.getView().getId()
+            id: that.getView().getId(),
           }).then(function (oFragment) {
             that.oCreateAppoinmentPopup = oFragment;
-            that.getView().addDependent(that.oCreateAppoinmentPopup)
-            that.oCreateAppoinmentPopup.setTitle("Create new appoinment")
+            that.getView().addDependent(that.oCreateAppoinmentPopup);
+            that.oCreateAppoinmentPopup.setTitle("Create new appoinment");
             that.oCreateAppoinmentPopup.open();
-          })
-        }
-
-        else {
+          });
+        } else {
           this.oCreateAppoinmentPopup.open();
         }
       },
@@ -155,13 +162,12 @@ sap.ui.define(
       // +++++++++++++ Here we are Drop the Appoinment after Drag +++++++++++++++++++++
 
       handleAppointmentDrop: function (oEvent) {
-
-        var oAppointment = oEvent.getParameter("appointment")
-        var oStartDate = oEvent.getParameter("startDate")
-        var oEndDate = oEvent.getParameter("endDate")
-        var bCopy = oEvent.getParameter("copy")
-        var sAppointmentTitle = oAppointment.getTitle()
-        var oModel = this.getView().getModel("local")
+        var oAppointment = oEvent.getParameter("appointment");
+        var oStartDate = oEvent.getParameter("startDate");
+        var oEndDate = oEvent.getParameter("endDate");
+        var bCopy = oEvent.getParameter("copy");
+        var sAppointmentTitle = oAppointment.getTitle();
+        var oModel = this.getView().getModel("local");
         var oNewAppoinment;
 
         if (bCopy) {
@@ -171,7 +177,7 @@ sap.ui.define(
             // text: oAppointment.getText(),
             type: oAppointment.getType(),
             startDate: oStartDate,
-            endDate: oEndDate
+            endDate: oEndDate,
           };
           oModel.getData().appointments.push(oNewAppoinment);
           oModel.updateBindings();
@@ -180,18 +186,17 @@ sap.ui.define(
           oAppointment.setEndDate(oEndDate);
         }
 
-        MessageToast.show("Appointment with title \n'"
-          + sAppointmentTitle
-          + "'\n has been " + (bCopy ? "create" : "moved")
+        MessageToast.show(
+          "Appointment with title \n'" +
+            sAppointmentTitle +
+            "'\n has been " +
+            (bCopy ? "create" : "moved")
         );
       },
-
 
       //+++++++++++++++++++++ Here we resize the Appoinment ++++++++++++++++++++++++
 
       handleAppointmentResize: function (oEvent) {
-
-
         var oAppointment = oEvent.getParameter("appointment"),
           oStartDate = oEvent.getParameter("startDate"),
           oEndDate = oEvent.getParameter("endDate"),
@@ -200,33 +205,63 @@ sap.ui.define(
         oAppointment.setStartDate(oStartDate);
         oAppointment.setEndDate(oEndDate);
 
-        MessageToast.show("Appointment with title \n'"
-          + sAppointmentTitle
-          + "'\n has been resized"
+        MessageToast.show(
+          "Appointment with title \n'" +
+            sAppointmentTitle +
+            "'\n has been resized"
         );
       },
       // ++++++++++++++++ Close Popup +++++++++++++++++++++
-      closeDialog: function (oEvent) {
-        oEvent.getSource().getParent().getParent().close()
+      closeAppoinment: function (oEvent) {
+        this.getView().getModel("local").setProperty("/allDay", false);
+        this.getView()
+          .byId("DTP1")
+          .setValue(
+            formatter.StartDateHardCodedTime(
+              this.getView().byId("SPC1").getStartDate()
+            )
+          );
+        this.getView()
+          .byId("DTP2")
+          .setValue(
+            formatter.EndDateHardCodedTime(
+              this.getView().byId("SPC1").getStartDate()
+            )
+          );
+        oEvent.getSource().getParent().getParent().close();
       },
 
       // +++++++++++++++++++++++ When we click the AllDay checkbox +++++++++++++++++
       handleCheckBoxSelect: function (oEvent) {
-
         let AllDay = oEvent.getSource().getSelected(),
-          StartDate = this.getView().getModel("local").getProperty("/AppoinmentDetails").start_date,
-          EndDate = this.getView().getModel("local").getProperty("/AppoinmentDetails").end_date
+          StartDate = this.getView()
+            .getModel("local")
+            .getProperty("/AppoinmentDetails").start_date,
+          EndDate = this.getView()
+            .getModel("local")
+            .getProperty("/AppoinmentDetails").end_date;
 
         if (AllDay) {
-          let ModifiedStartDate = formatter.removeTimePart(StartDate)
-          let ModifiedEndDate = formatter.removeTimePart(EndDate)
+          let ModifiedStartDate = formatter.removeTimePart(StartDate);
+          let ModifiedEndDate = formatter.removeTimePart(EndDate);
 
-          this.getView().byId("DTP1").setValue(ModifiedStartDate)
-          this.getView().byId("DTP2").setValue(ModifiedEndDate)
-        }
-        else {
-          this.getView().byId("DTP1").setValue(formatter.StartDateHardCodedTime(this.getView().byId("SPC1").getStartDate()))
-          this.getView().byId("DTP2").setValue(formatter.EndDateHardCodedTime(this.getView().byId("SPC1").getStartDate()))
+          this.getView().byId("DTP1").setValue(ModifiedStartDate);
+          this.getView().byId("DTP2").setValue(ModifiedEndDate);
+        } else {
+          this.getView()
+            .byId("DTP1")
+            .setValue(
+              formatter.StartDateHardCodedTime(
+                this.getView().byId("SPC1").getStartDate()
+              )
+            );
+          this.getView()
+            .byId("DTP2")
+            .setValue(
+              formatter.EndDateHardCodedTime(
+                this.getView().byId("SPC1").getStartDate()
+              )
+            );
         }
       },
 
@@ -269,8 +304,6 @@ sap.ui.define(
           });
         });
       },
-
-    })
-
-  })
-
+    });
+  }
+);

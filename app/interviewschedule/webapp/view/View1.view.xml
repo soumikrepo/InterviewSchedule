@@ -8,6 +8,9 @@
     xmlns:card="sap.f.cards"
     height="100%"
 >
+    <Page showHeader = "false"  >
+    <content>
+
     <ScrollContainer
         height="100%"
         width="100%"
@@ -80,4 +83,15 @@
             </items>
         </IconTabBar>
     </ScrollContainer>
+
+    </content>
+  	<footer>
+			<OverflowToolbar>
+				<ToolbarSpacer/>
+				<Button text="{local>/currentJobReqCount} out of {local>/JobReqCount}" type="Accept" press="LoadTop" />
+		
+			</OverflowToolbar>
+		</footer>
+    </Page>
+
 </mvc:View>

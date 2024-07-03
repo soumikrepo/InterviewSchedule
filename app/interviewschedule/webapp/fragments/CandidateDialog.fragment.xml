@@ -34,6 +34,10 @@
                                 <Text text="{local>contactEmail}" />
                             </HBox>
                             
+                             <HBox>
+                                <Label text="Phone :" />
+                                <Text text="{local>cellPhone}" />
+                            </HBox>
                         </VBox>
                     </TileContent>
                 </GenericTile>

@@ -39,6 +39,7 @@ entity JobApplicationInterview as
         source,
         startDate,
         status,
+        templateType
         // interviewer : Association to one User on interviewer.userId = $self
         
     }

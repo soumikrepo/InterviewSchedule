@@ -6,10 +6,16 @@
 	xmlns="sap.m">
 
     <VBox class="sapUiSmallMargin">
-    <PlanningCalendar id="PC1" rows="{path: 'local>/selectedInterviewer'}">
+    <PlanningCalendar 
+      id="PC1" 
+      singleSelection="false"
+      rows="{path: 'local>/selectedInterviewer'}"
+      intervalSelect="handleIntervalSelect"
+      appointmentsVisualization="Filled">
     <toolbarContent>
         <Title text="Interview Schedule Calendar" titleStyle="H4"/>
         <Button icon="sap-icon://sys-add" text="Add required interviewer" press="addNewInterviewer"></Button>
+        <Button icon="sap-icon://delete" text="Delete selected interviewer" press="deleteSelectedInterviewer" type="Reject"></Button>
     </toolbarContent>
     
     <rows>
@@ -18,6 +24,7 @@
      icon="sap-icon://employee"
      title="{local>defaultFullName}"
      text="{local>email}"
+     selected="true"
     >
     
     </PlanningCalendarRow>    
